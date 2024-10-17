@@ -1,0 +1,42 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-image
+  annotations:
+    policies.kyverno.io/category: Supply Chain Security Best Practices
+    policies.kyverno.io/description: |
+      Using the Cosign project, OCI images may be signed to ensure supply chain
+      security is maintained. Those signatures can be verified before pulling into
+      a cluster. This policy checks the signature of images in the repo
+      docker.io/anushah/ to ensure it has been signed by verifying
+      its signature against the provided public key. This policy serves as an illustration for
+      how to configure a similar rule and will require replacing with your image(s) and keys.
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: check-image
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - imageReferences:
+        - "docker.io/anushah/*"
+        attestors:
+        - count: 1
+          entries:
+          - keys:
+              publicKeys: |-
+                -----BEGIN PUBLIC KEY-----
+                MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEnDXT69JRfAXLMppl06w1OLZx7q7f
+                GE7Vn5CYdgt8JD3tNfYp8p40BlYDEJqMfl26hqZCDHl9quJAK4z/mFK86w==
+                -----END PUBLIC KEY-----             
+              rekor:
+                ignoreTlog: true
+                url: https://rekor.sigstore.dev
+

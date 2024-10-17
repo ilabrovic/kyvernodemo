@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - kyverno-demo/groups/dev01.yaml
+  - kyverno-demo/crq/dev01.yaml
+  - kyverno-demo/obc/dev01-small.yaml
+  - kyverno-demo/obc/dev01-unlimited.yaml
+  - kyverno-demo/obc/dev01-large.yaml
+  - kyverno-demo/obc/dev01-toomany.yaml

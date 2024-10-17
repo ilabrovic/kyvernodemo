@@ -1,0 +1,90 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: maxsize-bucket
+  annotations:
+    policies.kyverno.io/category: Workload Best Practices
+    policies.kyverno.io/description: |
+      This policy sets the `maxsize` property on Objectbucketclaims,
+      and verifies if a user-given value of maxsize does not exceed the quota
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: ObjectBucketClaim
+    policies.kyverno.io/title: Enfore maxsize with S3 Buckets
+spec:
+  background: false
+  validationFailureAction: Enforce
+  rules:
+  - name: maxsize-bucket-default-size
+    context:
+    - name: namespaceprefix
+      variable:
+        jmesPath: "split(request.namespace, '-')[0]"
+    match:
+      any:
+      - resources:
+          kinds:
+            - ObjectBucketClaim
+    preconditions:
+      all:
+      - key: "{{ namespaceprefix }}"
+        operator: AnyNotIn
+        value:
+        - openshift
+        - kube
+        - cert
+        - default
+        - kyverno
+        - nirmata
+        - rook
+      - key: '{{ request.operation }}'
+        operator: AnyIn
+        value:
+          - CREATE
+          - UPDATE
+    mutate:
+      patchStrategicMerge:
+        spec:
+          additionalConfig:
+            +(maxSize): '100Mi'
+
+  - name: maxsize-bucket-quota-controle
+    context:
+    - name: namespaceprefix
+      variable:
+        jmesPath: "split(request.namespace, '-')[0]"
+    - name: quotaobjectbucket
+      apiCall:
+        urlPath: "/apis/quota.openshift.io/v1/clusterresourcequotas"
+        jmesPath: "items[?metadata.name == '{{ namespaceprefix }}'].spec.quota.hard.\"ocs-storagecluster-ceph-rgw.storageclass.storage.k8s.io/requests.storage\" || ['0Mi']"
+    match:
+      any:
+      - resources:
+          kinds:
+            - ObjectBucketClaim
+    preconditions:
+      all:
+      - key: "{{ namespaceprefix }}"
+        operator: AnyNotIn
+        value:
+        - openshift
+        - kube
+        - cert
+        - default
+        - kyverno
+        - nirmata
+        - rook
+      - key: "{{ request.operation }}"
+        operator: AnyIn
+        value: 
+        - CREATE
+        - UPDATE
+    validate:
+      message: >-
+        Your request for an ObjectBucketClaim {{ request.object.spec.additionalConfig.maxSize || '0' }} exceeds your quota '{{ quotaobjectbucket[0] }}'.
+        Check your quota and specify the maxSize correctly.
+      deny:
+        conditions:
+          all:
+          - key: "{{ request.object.spec.additionalConfig.maxSize || '999Ti' }}"
+            operator: GreaterThan
+            value: "{{ quotaobjectbucket[0] }}"

@@ -1,0 +1,24 @@
+#!/bin/sh
+export OVERLAY=local
+export PW=xxxOpenshiftLocalSetupgeneratedTokenxxx
+export OPENSHIFTURL=https://console-openshift-console.apps-crc.testing
+export OPENSHIFTAPIURL=https://api.crc.testing:6443
+export OPENSHIFTAPISECURE=no
+
+export KUBECONFIG=~/.kube/cluster-${OVERLAY}-${1:-kubeadmin}
+touch $KUBECONFIG
+export PS1="${KUBECONFIG}:%1~\$ "
+
+oc logout
+case "${1:=kubeadmin}" in
+kubeadmin)
+  oc login -u kubeadmin -p $PW $OPENSHIFTAPIURL
+  ;;
+developer)
+  oc login -u developer -p developer $OPENSHIFTAPIURL
+  ;;
+*)
+  oc login -u $1 -p $1 $OPENSHIFTAPIURL
+  ;;
+esac
+oc whoami

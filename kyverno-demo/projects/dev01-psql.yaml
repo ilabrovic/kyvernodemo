@@ -1,0 +1,2 @@
+oc new-project dev01-psql
+oc label namespace dev01-psql quota=dev01

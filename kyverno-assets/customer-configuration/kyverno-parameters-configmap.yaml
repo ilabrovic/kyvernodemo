@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  argocdbasedomain: apps-crc.testing
+  clustername: openshiftlocal
+  ldapdomain: LOCAL
+  sandbox: "TRUE"
+kind: ConfigMap
+metadata:
+  name: kyverno-parameters
+  namespace: kyverno
+

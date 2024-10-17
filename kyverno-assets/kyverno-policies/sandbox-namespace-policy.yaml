@@ -1,0 +1,90 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: sandbox-namespace
+  annotations:
+    policies.kyverno.io/category: Workload Best Practices
+    policies.kyverno.io/description: >
+      This policy automatically creates a sandbox.
+      Sandboxes are not needed in production. To achieve skipping sandbox namespaces in certain environments,
+      we introduce a key sandbox in configmap kyverno-parameters in namespace kube-kyverno
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/title: Create onboarding resources
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: sandbox-namespace
+    context:
+    - name: kyvernoparameters
+      configMap:
+        name: kyverno-parameters
+        namespace: kyverno
+    - name: namespaceprefix
+      variable:
+        jmesPath: request.object.metadata.name 
+    match:
+      any:
+      - resources:
+          kinds:
+            - ClusterResourceQuota
+    preconditions:
+      all:
+      - key: "{{ to_upper('{{ kyvernoparameters.data.sandbox }}') }}"
+        operator: Equals
+        value: "TRUE"
+      - key: '{{ request.operation }}'
+        operator: AnyIn
+        value:
+          - CREATE
+          - UPDATE
+    generate:
+      synchronize: true
+      apiVersion: v1
+      kind: Namespace
+      name: "{{ request.object.metadata.name }}-sandbox"
+  - name: sandbox-admin-rolebinding
+    context:
+    - name: kyvernoparameters
+      configMap:
+        name: kyverno-parameters
+        namespace: kyverno
+    - name: namespaceprefix
+      variable:
+        jmesPath: split(request.object.metadata.name, '-')[0] 
+    match:
+      any:
+      - resources:
+          kinds:
+            - Namespace
+          names:
+            - "*-sandbox"
+    preconditions:
+      all:
+      - key: "{{ to_upper('{{ kyvernoparameters.data.sandbox }}') }}"
+        operator: Equals
+        value: "TRUE"
+      - key: '{{ request.operation }}'
+        operator: AnyIn
+        value:
+          - CREATE
+          - UPDATE
+      - key: '{{ request.object.status.phase }}'
+        operator: AnyIn
+        value:
+          - Active
+    generate:
+      synchronize: true
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+      name: "admin-{{ namespaceprefix }}-sandbox"
+      namespace: "{{ request.object.metadata.name }}"
+      data:
+        subjects:
+        - apiGroup: rbac.authorization.k8s.io
+          kind: Group
+          name: "{{ namespaceprefix }}"
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: admin

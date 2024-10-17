@@ -1,0 +1,10 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: obc-toomany
+spec:
+  additionalConfig:
+    maxSize: "100000"
+  generateBucketName: prefixtoomany
+  storageClassName: ocs-storagecluster-ceph-rgw
+

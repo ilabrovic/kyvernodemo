@@ -1,0 +1,17 @@
+apiVersion: quota.openshift.io/v1
+kind: ClusterResourceQuota
+metadata:
+  name: dev01
+spec:
+  quota:
+    hard:
+      count/objectbucketclaims.objectbucket.io: "2"
+      limits.cpu: "4"
+      limits.memory: 5Gi
+      ocs-storagecluster-ceph-rgw.storageclass.storage.k8s.io/requests.storage: 300Mi
+      requests.cpu: "1"
+      requests.memory: 1Gi
+  selector:
+    annotations:
+      quota: dev01
+

@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - kyverno-added-privilege-adminrole-clusterrolebinding.yaml
+  - kyverno-added-privilege-create-namespace-clusterrole.yaml
+  - kyverno-added-privilege-create-namespace-clusterrolebinding.yaml
+  - kyverno-added-privilege-custom-resource-argocd-clusterrole.yaml
+  - kyverno-added-privilege-custom-resource-argocd-clusterrolebinding.yaml

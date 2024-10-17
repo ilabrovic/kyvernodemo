@@ -1,0 +1,65 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-namespace-names
+  annotations:
+    policies.kyverno.io/category: Workload Best Practices
+    policies.kyverno.io/description: |
+      This policy limits the creation of namespaces projectRequests to the following:
+      - Regular users can create Projects that starts with the name of the team.
+        Here that would be any group that the user is member of
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/title: Allowed Namespace Names for Regular Users
+spec:
+  admission: true
+  background: false
+  rules:
+  - name: user-validate-ns-name
+    context:
+    - name: allowedgroupnamespaceprefixes
+      variable:
+        jmesPath: request.userInfo.groups[?contains(@, ':') == `false`][].[split(@, '-')[0]][].join('-', [to_lower(@), '*'])
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+          - ProjectRequest
+    preconditions:
+      all:
+      - key: "{{ request.operation }}"
+        operator: Equals
+        value: CREATE
+      - key: "{{ serviceAccountName }}"
+        operator: Equals
+        value: ""
+      - key: "{{ request.userInfo.username }}"
+        operator: AnyNotIn
+        value: 
+        - kube:admin
+        - kubeadmin
+        - system:admin
+    validate:
+      allowExistingViolations: true
+      message: |
+        The only names approved for your namespaces are the ones starting with:
+        {{ allowedgroupnamespaceprefixes | join(', ', @) }}
+      deny:
+        conditions:
+          all:
+          - key: "{{request.object.metadata.name}}"
+            operator: AnyNotIn
+            value: "{{ allowedgroupnamespaceprefixes }}"
+          - key: "{{request.object.metadata.name}}"
+            operator: AnyNotIn
+            value:
+            - openshift-*
+            - kube-*
+            - cert-*
+            - default
+            - kyverno*
+            - nirmata*
+            - rook*
+  validationFailureAction: Enforce
+

@@ -1,0 +1,45 @@
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: label-and-annotate-namespaces
+  annotations:
+    policies.kyverno.io/category: Workload Best Practices
+    policies.kyverno.io/description: |
+      This policy sets the default labels and annotations for further processing
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/title: Label and annotate namespaces
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: add-labels-and-annotations
+    context:
+    - name: namespaceprefix
+      variable:
+        jmesPath: "split(request.object.metadata.name||'default', '-')[0] || 'default'"
+    match:
+      any:
+      - resources:
+          kinds:
+            - Namespace
+    preconditions:
+      all:
+      - key: "{{ namespaceprefix }}"
+        operator: AnyNotIn
+        value:
+        - openshift
+        - kube
+        - cert
+        - default
+        - kyverno
+        - nirmata
+        - rook
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            +(argocd.argoproj.io/managed-by): "{{ namespaceprefix }}-gitops"
+          annotations:
+            +(quota): "{{ namespaceprefix }}"
+
