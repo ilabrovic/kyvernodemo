@@ -7,3 +7,4 @@ resources:
   - maxsize-bucket-policy.yaml
   - restrict-namespace-names-policy.yaml
   - sandbox-namespace-policy.yaml
+  - networkpolicies-policy.yaml

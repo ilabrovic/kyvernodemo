@@ -25,7 +25,7 @@ In a validat rule, oc keeps saying policy changed.
 
 !!Not verified:
 
-When polkicy is not included with allowExistingViolations, 
+When policy is not included with allowExistingViolations, 
 Just Add this degfault key an its fixed.
 
       allowExistingViolations: true
