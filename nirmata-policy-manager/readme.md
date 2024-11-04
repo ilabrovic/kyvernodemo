@@ -17,15 +17,24 @@ Make sure to install this, instructions are on the [nctl documentation site](htt
 
 **Note:** Depending on your machine pick the right binary to download, e.g. arm architecture for Macbook M2Pro models. The demo is prepared with the following steps.
 
+https://downloads.nirmata.io/nctl/stablereleases/
+
 https://nirmata.io/nctl/downloads
 
 ```
 curl -LO https://dl.nirmata.io/nctl/nctl_$NCTL_VERSION/nctl_$NCTL_VERSION\_linux_amd64.zip.asc
-unzip nctl_4.2.1_linux_amd64.zip 
+unzip nctl_4.3.1_linux_amd64.zip 
 chmod u+x nctl
 sudo mv nctl /usr/local/bin/nctl
 nctl version
 ```
+
+### nctl on Mac.
+
+Mac-users might not be able to start nctl and getting an error that the binary cannot be checked for malicious software.
+Just open it in Finder, right click 'Open' and you will get a message wether to allow executing this binary. Enter yes, and from there you should be good to use the binary from the commandline.
+
+
 
 ## kubectl
 
