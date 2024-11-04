@@ -1,10 +1,38 @@
 # rook-ceph
 
-##Under construction##
-
 With these notes we are trying to get objectbucket storage on openshift local up and running.
 We need this to demonstrate the Kyverno policy that handles quota on objectbucketstorage.
 
+So far attempts have failed, but even without storage, or running the rook operator, it's sufficient for the demo to install the CRD's.
+
+Online reference:
+
+https://developers.redhat.com/articles/2022/07/13/install-storage-your-application-cluster-using-rook#log_in_to_the_openshift_cluster
+
+
+## Install CRD's
+
+oc apply -f https://raw.githubusercontent.com/rook/rook/master/deploy/examples/crds.yaml
+oc apply -f https://raw.githubusercontent.com/rook/rook/master/deploy/examples/common.yaml
+ 
+## Allow everyone to create obc
+
+Operator comes with several roles but none allow developers to create their own obc
+
+Add this role with the aggreation to admin option:
+
+oc kustomize . | oc apply -f -
+
+or (its only 1 yaml..):
+oc apply -f developers-objectbucketclaims.yaml
+
+
+
+
+# Under construction
+
+The next paragraphs are just notes on our attempts to get rook operational
+So far unsuccesfull, perhaps the notes will help in additional attempts...
 
 # Adding diskspace
 
@@ -59,25 +87,4 @@ without sudo:
 fout: verkrijgen van domein 'crc' mislukte
 
 
-## Rook operator install
-
-https://developers.redhat.com/articles/2022/07/13/install-storage-your-application-cluster-using-rook#log_in_to_the_openshift_cluster
-
-Even without storage, or running the rook operator, it's sufficient for the demo to install the CRD's.
-
-## Install CRD's
-
-oc apply -f https://raw.githubusercontent.com/rook/rook/master/deploy/examples/crds.yaml
-$ oc apply -f https://raw.githubusercontent.com/rook/rook/master/deploy/examples/common.yaml
- 
-## Allow everyone to create obc
-
-Operator comes with several roles but none allow developers to create their own obc
-
-Add this role with the aggreation to admin option:
-
-oc kustomize . | oc apply -f -
-
-or (its only 1 yaml..):
-oc apply -f developers-objectbucketclaims.yaml
 

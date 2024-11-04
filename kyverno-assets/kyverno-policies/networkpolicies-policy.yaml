@@ -1,0 +1,53 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: networkpolicies
+  annotations:
+    policies.kyverno.io/title: Networkpolicies
+    policies.kyverno.io/description: |
+      This policy adds a default networkpolicy
+spec:
+  generateExisting: true
+  validationFailureAction: Enforce
+  rules:
+  - name: allow-same-namespace
+    context:
+    - name: namespaceprefix
+      variable:
+        jmesPath: split(request.object.metadata.name, '-')[0] 
+    match:
+      any:
+      - resources:
+          kinds:
+            - Namespace
+    preconditions:
+      all:
+        - key: '{{ namespaceprefix }}'
+          operator: AllNotIn
+          value:
+          - openshift
+          - kube
+          - cert
+          - default
+          - kyverno
+          - nirmata
+          - rook
+        - key: '{{ request.operation }}'
+          operator: AnyIn
+          value:
+            - CREATE
+            - UPDATE
+    generate:
+      synchronize: true
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      name: allow-same-namespace
+      namespace: "{{ request.object.metadata.name }}"
+      data:
+        spec:
+          ingress:
+          - from:
+            - podSelector: {}
+          podSelector: {}
+          policyTypes:
+          - Ingress
