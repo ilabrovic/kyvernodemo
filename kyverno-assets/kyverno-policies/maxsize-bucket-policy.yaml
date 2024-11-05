@@ -36,6 +36,7 @@ spec:
         - kyverno
         - nirmata
         - rook
+        - hostpath
       - key: '{{ request.operation }}'
         operator: AnyIn
         value:

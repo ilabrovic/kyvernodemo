@@ -44,7 +44,7 @@ With the Configmap lookup we establish if the cluster is production at which the
 Lets onboard a couple of tenants, this is done by the admin team allowing access to a new team
 Randomly select some tenant names:
 ```
-gshuf -n 20 random/groups > tmp/selectedgroups
+gshuf -n 20 random/groups | tee tmp/selectedgroups
 ```
 
 Create groups (dev01 + those from the random selected groups) in the cluster
@@ -68,7 +68,7 @@ done
 
 Check if sandboxes are created for any created quota:
 ```
-oc get project|grep sandbox
+oc get namespaces|grep sandbox
 ```
 
 
@@ -88,7 +88,7 @@ Notable Kyverno feature: mutate policy
 To aid Openshift in managing the clusterresourcequota, we need an annotation on each created namespace.
 Let's verify if that happend on the sandbox namespaces we just created
 ```
-oc get namespaces -o custom-columns=NM:.metadata.name,QUOTA:.metadata.annotations.quota|grep -v -E 'openshift|kube|kyverno|nirmata|rook|default'
+oc get namespaces -o custom-columns=NM:.metadata.name,QUOTA:.metadata.annotations.quota|grep -v -E 'openshift|kube|kyverno|nirmata|rook|hostpath|default'
 ```
 
 Openshift now correctly handles clusterresourcequotas, as we specified when we created them. For example lets take a look at dev01 crq: (see which formula we programmed in there at the 'selector'?)

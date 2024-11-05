@@ -61,5 +61,6 @@ spec:
             - kyverno*
             - nirmata*
             - rook*
+            - hostpath*
   validationFailureAction: Enforce
 
