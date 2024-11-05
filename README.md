@@ -42,7 +42,7 @@ With the Configmap lookup we establish if the cluster is production at which the
 #### DEMO #1: Onboard a couple of teams and see what happens
 
 Lets onboard a couple of tenants, this is done by the admin team allowing access to a new team
-Randomly select some tenant names:
+#Randomly select some tenant names to onboard
 ```
 gshuf -n 20 random/groups | tee tmp/selectedgroups
 ```
