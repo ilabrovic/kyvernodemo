@@ -17,6 +17,10 @@ cat ~/.crc/crc.log
 
 time="2024-11-06T12:28:14+01:00" level=debug msg="SSH command results: err: dial tcp 127.0.0.1:2222: connect: connection refused, output: "
 
+Try this setting see if anything improves:
+crc config set disable-update-check true
+
+
 ### gitops is taking forever to start
 
 oc get events --sort-by=.lastTimestamp 
