@@ -1,5 +1,22 @@
 ## Troubleshooting
 
+### CRC not starting
+
+crc status
+DAEMON not started?
+
+cat ~/.crc/crcd.log
+DNS issues?
+
+cat /etc/resolv.conf
+do we have dns entry?
+
+SSH issues?
+Are there errors regarding ssh?
+cat ~/.crc/crc.log
+
+time="2024-11-06T12:28:14+01:00" level=debug msg="SSH command results: err: dial tcp 127.0.0.1:2222: connect: connection refused, output: "
+
 ### gitops is taking forever to start
 
 oc get events --sort-by=.lastTimestamp 
