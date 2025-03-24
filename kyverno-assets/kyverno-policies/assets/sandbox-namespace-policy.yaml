@@ -27,17 +27,15 @@ spec:
       any:
       - resources:
           kinds:
-            - ClusterResourceQuota
+          - ClusterResourceQuota
+          operations:
+          - CREATE
+          - UPDATE
     preconditions:
       all:
       - key: "{{ to_upper('{{ kyvernoparameters.data.sandbox }}') }}"
         operator: Equals
         value: "TRUE"
-      - key: '{{ request.operation }}'
-        operator: AnyIn
-        value:
-          - CREATE
-          - UPDATE
     generate:
       synchronize: true
       apiVersion: v1
@@ -56,19 +54,17 @@ spec:
       any:
       - resources:
           kinds:
-            - Namespace
+          - Namespace
           names:
-            - "*-sandbox"
+          - "*-sandbox"
+          operations:
+          - CREATE
+          - UPDATE
     preconditions:
       all:
       - key: "{{ to_upper('{{ kyvernoparameters.data.sandbox }}') }}"
         operator: Equals
         value: "TRUE"
-      - key: '{{ request.operation }}'
-        operator: AnyIn
-        value:
-          - CREATE
-          - UPDATE
       - key: '{{ request.object.status.phase }}'
         operator: AnyIn
         value:

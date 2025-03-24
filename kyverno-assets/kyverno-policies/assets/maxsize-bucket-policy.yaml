@@ -23,7 +23,10 @@ spec:
       any:
       - resources:
           kinds:
-            - ObjectBucketClaim
+          - ObjectBucketClaim
+          operations:
+          - CREATE
+          - UPDATE
     preconditions:
       all:
       - key: "{{ namespaceprefix }}"
@@ -36,11 +39,6 @@ spec:
         - kyverno
         - nirmata
         - rook
-      - key: '{{ request.operation }}'
-        operator: AnyIn
-        value:
-          - CREATE
-          - UPDATE
     mutate:
       patchStrategicMerge:
         spec:
@@ -60,7 +58,10 @@ spec:
       any:
       - resources:
           kinds:
-            - ObjectBucketClaim
+          - ObjectBucketClaim
+          operations:
+          - CREATE
+          - UPDATE
     preconditions:
       all:
       - key: "{{ namespaceprefix }}"
@@ -73,11 +74,6 @@ spec:
         - kyverno
         - nirmata
         - rook
-      - key: "{{ request.operation }}"
-        operator: AnyIn
-        value: 
-        - CREATE
-        - UPDATE
     validate:
       message: >-
         Your request for an ObjectBucketClaim {{ request.object.spec.additionalConfig.maxSize || '0' }} exceeds your quota '{{ quotaobjectbucket[0] }}'.

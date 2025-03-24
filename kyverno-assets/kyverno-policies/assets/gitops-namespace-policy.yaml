@@ -22,25 +22,19 @@ spec:
         any:
           - resources:
               kinds:
-                - Namespace
+              - Namespace
               names:
-                - "*-gitops"
+              - "*-gitops"
+              operations:
+              - CREATE
+              - UPDATE
       preconditions:
         all:
           - key: "{{ namespaceprefix }}"
             operator: AnyNotIn
             value:
-              - openshift
-              - default
-          - key: '{{ request.operation }}'
-            operator: AnyIn
-            value:
-              - CREATE
-              - UPDATE
-          - key: '{{ request.object.status.phase }}'
-            operator: AnyIn
-            value:
-              - Active
+            - openshift
+            - default
       generate:
         apiVersion: rbac.authorization.k8s.io/v1
         kind: RoleBinding
@@ -69,25 +63,19 @@ spec:
         any:
           - resources:
               kinds:
-                - Namespace
+              - Namespace
               names:
-                - "*-gitops"
+              - "*-gitops"
+              operations:
+              - CREATE
+              - UPDATE
       preconditions:
         all:
           - key: "{{ namespaceprefix }}"
             operator: AnyNotIn
             value:
-              - openshift
-              - default
-          - key: '{{ request.operation }}'
-            operator: AnyIn
-            value:
-              - CREATE
-              - UPDATE
-          - key: '{{ request.object.status.phase }}'
-            operator: AnyIn
-            value:
-              - Active
+            - openshift
+            - default
       generate:
         apiVersion: argoproj.io/v1beta1
         kind: ArgoCD
