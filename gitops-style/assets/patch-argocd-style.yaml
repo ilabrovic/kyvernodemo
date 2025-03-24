@@ -1,10 +1,11 @@
 - op: add
-  path: /spec/server/-
+  path: /spec/server/volumeMounts
   value:
-    volumeMounts:
     - mountPath: /shared/app/custom
       name: styles
-    volumes:
+- op: add
+  path: /spec/server/volumes
+  value:
     - configMap:
         name: argocd-styles-cm
       name: styles

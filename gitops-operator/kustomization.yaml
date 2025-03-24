@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-gitops-operator
+
+resources:
+- assets/ns.yaml
+- assets/gitops-operatorgroup.yaml
+- assets/gitops-subscription.yaml
+
+patches:
+- path: assets/disable-default-instance.yaml
+  target:
+    kind: Subscription
+    name: openshift-gitops-operator
+   

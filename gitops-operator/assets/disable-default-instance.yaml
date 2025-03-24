@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/config
+  value:
+    env:
+    - name: "DISABLE_DEFAULT_ARGOCD_INSTANCE"
+      value: "true"
