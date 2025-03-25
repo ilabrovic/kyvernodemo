@@ -20,15 +20,11 @@ oc create -f https://github.com/kyverno/kyverno/releases/download/v1.13.4/instal
 ## Verify installation
 
 A new namespace kyverno will be created in which the operator workload is deployed.
-Verify the new namespace, running pods, and check the logs
+Verify the new namespace, running pods, and check the logs and podimages for running Kyverno version:
 
 oc get namespace kyverno
 oc get pods -n kyverno --show-labels
-
-Verifying the running version is possible to check the logs:
-app.kubernetes.io/component=background-controller
-
-Or check the running images:
+oc logs -l app.kubernetes.io/component=background-controller -n kyverno --tail=-1 |head -n 1
 oc get pods -n kyverno -o custom-columns=IMAGE:.spec.containers[*].image,CONTAINER:.spec.containers[*].name
 
 Thats it!

@@ -10,6 +10,9 @@ roleRef:
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
+  name: system:serviceaccount:kyverno:kyverno-admission-controller
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
   name: system:serviceaccount:kyverno:kyverno-background-controller
 - kind: ServiceAccount
   name: kyverno-background-controller
