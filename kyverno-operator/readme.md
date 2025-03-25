@@ -20,6 +20,7 @@ oc create -f https://github.com/kyverno/kyverno/releases/download/v1.13.4/instal
 ## Verify installation
 
 A new namespace kyverno will be created in which the operator workload is deployed.
+Verify the new namespace, running pods, and check the logs
 
 oc get namespace kyverno
 oc get pods -n kyverno --show-labels
