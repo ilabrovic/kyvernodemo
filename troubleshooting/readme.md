@@ -29,6 +29,13 @@ oc get pods -n kyverno
 oc logs -n kyverno -l app.kubernetes.io/component=admission-controller
 oc logs -n kyverno -l app.kubernetes.io/component=background-controller
 
+### restart the demo
+
+oc delete clusterresourcequotas --all
+oc delete pod -n kyverno --all
+oc get pods -n kyverno
+
+restart demo
 
 ### Troubleshooting policys to new Kyverno version
 

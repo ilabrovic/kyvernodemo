@@ -115,11 +115,13 @@ Now lets see what happens if a developer starts working on the cluster doing wor
 developer takes a look at the avialable namespaces and sees the sandboxes automatically provisioned!
 developer can also see rolebindings, because the group is admin in this namespace
 ```
-export OPENSHIFTAPIURL=https://api.crc.testing:6443
+
+OPENSHIFTAPIURL=$(oc get infrastructure cluster -o custom-columns=API:.status.apiServerURL --no-headers)
 oc login -u developer -p developer $OPENSHIFTAPI
 oc whoami
 oc get projects 
 oc get rolebinding -n dev01-sandbox -o wide
+oc get clusterresourcequotas
 ```
 
 developer creates a namespace, but failed because (s)he's no member of group dev00
