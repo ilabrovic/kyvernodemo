@@ -9,3 +9,6 @@ resources:
   - assets/kyverno-added-privilege-custom-resource-argocd-clusterrolebinding.yaml
   - assets/kyverno-added-privilege-watch-projectrequests-clusterrole.yaml
   - assets/kyverno-added-privilege-watch-projectrequests-clusterrolebinding.yaml
+  - assets/kyverno-added-privilege-watch-clusterresourcequotas-clusterrole.yaml
+  - assets/kyverno-added-privilege-watch-clusterresourcequotas-clusterrolebinding.yaml
+  

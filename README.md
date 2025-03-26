@@ -44,7 +44,7 @@ With the Configmap lookup we establish if the cluster is production at which the
 Lets onboard a couple of tenants, this is done by the admin team allowing access to a new team
 Randomly select some tenant names:
 ```
-gshuf -n 20 random/groups > tmp/selectedgroups
+sort --random-sort random/groups |head -n 20 > tmp/selectedgroups
 ```
 
 Create groups (dev01 + those from the random selected groups) in the cluster
