@@ -1,0 +1,54 @@
+- op: add
+  path: /spec/rules/1/generate/data/spec/applicationSet/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 101m
+        memory: 128Mi
+- op: add
+  path: /spec/rules/1/generate/data/spec/applicationSet/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 102m
+        memory: 128Mi
+- op: add
+  path: /spec/rules/1/generate/data/spec/ha/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 103m
+        memory: 128Mi
+- op: add
+  path: /spec/rules/1/generate/data/spec/redis/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 104m
+        memory: 128Mi
+- op: add
+  path: /spec/rules/1/generate/data/spec/repo/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 105m
+        memory: 128Mi
+- op: add
+  path: /spec/rules/1/generate/data/spec/server/resources
+  value:
+      limits:
+        cpu: "300m"
+        memory: 256Mi
+      requests:
+        cpu: 106m
+        memory: 128Mi

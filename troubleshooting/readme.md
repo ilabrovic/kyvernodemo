@@ -12,12 +12,30 @@ all kinds of things can go wrong
 Did openshiftlocal start while running a VPN client?
 Don't do this..
 
+### urs
+
+Any urs left behind to check?
+oc get ur -n kube-kyverno
+
+### policy describe
+
+oc describe clusterpolicy sandbox-namespace
+
 
 ### If a policy is not working check the logs
+
+oc get pods -n kyverno
 
 oc logs -n kyverno -l app.kubernetes.io/component=admission-controller
 oc logs -n kyverno -l app.kubernetes.io/component=background-controller
 
+### restart the demo
+
+oc delete clusterresourcequotas --all
+oc delete pod -n kyverno --all
+oc get pods -n kyverno
+
+restart demo
 
 ### Troubleshooting policys to new Kyverno version
 
