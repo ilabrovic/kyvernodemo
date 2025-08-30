@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-gitops
+
+resources:
+- assets/argocd.yaml
+- assets/argocd-styles-cm.yaml
+
+patches:
+- path: assets/patch-argocd-style.yaml
+  target:
+    kind: ArgoCD
+    name: openshift-gitops
+- path: assets/patch-argocd-banner.yaml
+  target:
+    kind: ArgoCD
+    name: openshift-gitops

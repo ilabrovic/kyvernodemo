@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno-added-privilege-watch-projectrequests
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - projectrequests
+  verbs:
+  - watch
+  - list
+  - get

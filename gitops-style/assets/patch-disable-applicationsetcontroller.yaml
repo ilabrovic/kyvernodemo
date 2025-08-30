@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/controller/applicationSetController
+  value:
+    false
+- op: remove
+  path: /spec/applicationSet

@@ -20,7 +20,10 @@ spec:
       any:
       - resources:
           kinds:
-            - Namespace
+          - Namespace
+          operations:
+          - CREATE
+          - UPDATE
     preconditions:
       all:
         - key: '{{ namespaceprefix }}'
@@ -33,11 +36,6 @@ spec:
           - kyverno
           - nirmata
           - rook
-        - key: '{{ request.operation }}'
-          operator: AnyIn
-          value:
-            - CREATE
-            - UPDATE
     generate:
       synchronize: true
       apiVersion: networking.k8s.io/v1

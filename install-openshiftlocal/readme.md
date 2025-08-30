@@ -61,6 +61,10 @@ An '.openshiftlocal' exampleprofile is in the ./profile subfolder in this repo
 
 One of the operators we will be using to demo, is the Red Hat Gitops Operator.
 
+## Manual installation
+
+To manually install the operator you can do this:
+
 In the Openshift console:
 In the menu go to Operators - Operatorhub
 Select Gitops operator
@@ -70,6 +74,15 @@ Optionally, to save memory consumption, uninstall the default Gitops instance:
 ```
 oc patch subscription.operators openshift-gitops-operator -n openshift-gitops-operator --type=merge -p='{"spec":{"config":{"env":[{"name":"DISABLE_DEFAULT_ARGOCD_INSTANCE","value":"true"}]}}}'
 ```
+
+## Deploy as code!
+
+Of course you can install it by using code in the gitops-style folder in this repo.
+Dont want to install the default instance? Just uncomment the kustomization patch section in advance...
+```
+oc kustomize . |oc apply -f -
+```
+
 
 Just wait couple of minutes, the ArgoCD instance will be uninstalled by the operator automatically, freeing up resources to spend on other stuff...
 

@@ -33,43 +33,19 @@ all kinds of things can go wrong
 Did openshiftlocal start while running a VPN client?
 Don't do this..
 
-### did we deploy the config?
+### urs
 
-oc get configmap -n kyverno kyverno-parameters -o yaml
+Any urs left behind to check?
+oc get ur -n kube-kyverno
 
-### Any pod in trouble?
+### policy describe
 
-oc get pods --all-namespaces|grep -v Running  
+oc describe clusterpolicy sandbox-namespace
 
-### no issues with kyverno workload?
-
-oc get pods -n nirmata --show-labels
-
-oc logs -n nirmata -l app=nirmata-kube-controller
-oc logs -n nirmata -l app=opentelemetry
-
-oc get pods -n nirmata-system --show-labels
-
-oc logs -n nirmata-system -l app.kubernetes.io/name=nirmata-kyverno-operator
-
-oc get pods -n kyverno --show-labels
-
-oc logs -n nirmata -l app=nirmata-kube-controller
-
-oc logs -n kyverno -l app.kubernetes.io/component=cleanup-controller
-
-### check kyverno running version
-
-oc get pod -n kyverno -o yaml | grep image:
-
-
-### api server
-
-Anything in the api server logs?
-
-oc logs -n openshift-apiserver -l apiserver=true
 
 ### If a policy is not working check the logs
+
+oc get pods -n kyverno
 
 oc logs -n kyverno -l app.kubernetes.io/component=admission-controller
 oc logs -n kyverno -l app.kubernetes.io/component=background-controller
