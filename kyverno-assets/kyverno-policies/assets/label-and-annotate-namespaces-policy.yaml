@@ -35,6 +35,7 @@ spec:
         - kyverno
         - nirmata
         - rook
+        - hostpath
     mutate:
       patchStrategicMerge:
         metadata:
