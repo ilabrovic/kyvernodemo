@@ -39,15 +39,6 @@ spec:
         - kyverno
         - nirmata
         - rook
-<<<<<<< HEAD:kyverno-assets/kyverno-policies/maxsize-bucket-policy.yaml
-        - hostpath
-      - key: '{{ request.operation }}'
-        operator: AnyIn
-        value:
-          - CREATE
-          - UPDATE
-=======
->>>>>>> origin/main:kyverno-assets/kyverno-policies/assets/maxsize-bucket-policy.yaml
     mutate:
       patchStrategicMerge:
         spec:
