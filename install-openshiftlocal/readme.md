@@ -8,15 +8,39 @@ https://console.redhat.com/openshift/create/local
 Tip: on my machine i had a corporate VPN running which caused all kinds of performance, stability and pulling issues. Turn off any VPN that you may have.
 
 First install required packages:
-- libvirt
-- qemu-kvm
+sudo dnf install -y libvirt qemu-kvm
+
+## Download/install crc
 
 Download and install the openshift local crc installer package (instrictions on the website above)
 
+```
+cd
+mkdir -p crc
+wget https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/crc-linux-amd64.tar.xz
+tar -xvf crc-linux-amd64.tar.xz
+chmod ugo+x */crc
+
+#Kill previous installment to replace the binary
+#/home/ilabrovic/.crc/bin/crc daemon
+PID=$(pgrep -u ilabrovic crc)
+kill -9 ${PID:-9999999}
+
+cp */crc /usr/local/bin
+```
+
+# Get pullsecret from Red Hat
+
 Download/Copy pull secret, which the installer needs to pull images.
 
+rm ~/Downloads/pull-secret
+https://console.redhat.com/openshift/create/local
+Download keyfile
+
+# Download base image (6+ GiB)
+
 Initiate The Openshift local virtual machine.
-Note: it will install a new package approx 4Gi if not already present in your cache. Typically this happens first time you try it, or after an crc update..
+Note: it will install a new package approx 6Gi if not already present in your cache. Typically this happens first time you try it, or after an crc update..
 ```
 crc setup
 ```
@@ -28,19 +52,27 @@ https://docs.redhat.com/en/documentation/red_hat_openshift_local/2.42/html-singl
 Make sure to increase RAM when installing Openshift Local and you're adding additional operators
 Below the crc start for Openshift Local plus Kyverno and Gitops
 
+# Clean setup
+
+# ERRO failed to expose port :443 -> 192.168.127.2:443: listen tcp :443: bind: permission denied 
+# SOLUTION set host-network-access true
+
+crc delete --force
+crc config set host-network-access true
+crc cleanup
+crc setup
+
 ## Start Openshift Local
 
 Note in advance: this step will take approx 10 minutes to complete
 
 Openshift local requires some minimal amount of resources but depending on what you want to do with it (e.g. install extra operators) you may need to increase the defaults.
-These are the settings suffient for this demo environment:
-
-#Specs to start on system with 12core/32GB Ram (Macbook M2pro)
+These are the settings suffient for this demo environment, make sure your system has this amount of cpu and ram:
 ```
-crc start \
+crc start -p ~/Downloads/pull-secret \
 --cpus 8 \
 --memory 18000 \
---disk-size 46 \
+--disk-size 52 \
 --log-level debug
 ```
 
@@ -48,14 +80,27 @@ crc start \
 
 Some commands that may help to show your crc  configuration:
 ```
+crc status
 crc config view
 crc config get memory
 crc config set memory 18000
- ```
+```
 
-For your convenience save the generated kubeadmin token to a profilescript to quickly login to openshift and switch bewith kubeadmin and developer during your work and demo.
+crc oc-env
+eval $(crc oc-env)
 
-An '.openshiftlocal' exampleprofile is in the ./profile subfolder in this repo
+oc login -u developer -p developer https://api.crc.testing:6443
+
+KUBEADMIN=$(cat ~/.crc/machines/crc/kubeadmin-password)
+echo KUBEADMIN: $KUBEADMIN
+
+oc login -u kubeadmin -p ${KUBEADMIN:-NO} https://api.crc.testing:6443
+
+oc get console cluster -o yaml |yq .status.consoleURL
+echo KUBEADMIN: $KUBEADMIN
+oc whoami
+
+oc logout
 
 # Install Gitops operators
 

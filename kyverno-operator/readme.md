@@ -13,9 +13,9 @@ https://github.com/kyverno/kyverno/releases
 
 ## Yaml installation
 
-For our demo we will install the yaml version which covers everything we need here.
+For our demo we will install the yaml version which covers everything we need here:
 
-oc create -f https://github.com/kyverno/kyverno/releases/download/v1.13.4/install.yaml
+oc create -f https://github.com/kyverno/kyverno/releases/download/v1.15.2/install.yaml
 
 ## Verify installation
 
